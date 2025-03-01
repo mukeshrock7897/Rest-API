@@ -1,0 +1,54 @@
+**1. Fundamentals of REST API**  
+- What is REST?  
+- REST vs SOAP  
+- Principles of RESTful APIs  
+- HTTP Methods (GET, POST, PUT, DELETE, PATCH)  
+- HTTP Status Codes  
+- URL Structure & Endpoints  
+- Request & Response Format (JSON, XML)  
+- REST API Authentication (Basic Auth, Token-based Auth)  
+
+**2. API Development**  
+- Setting up a REST API (Flask, Django, FastAPI, Node.js, etc.)  
+- Designing RESTful Routes & Endpoints  
+- Handling Query Parameters & Path Variables  
+- Middleware in REST APIs  
+- Error Handling & Exception Management  
+- Logging & Monitoring  
+
+**3. REST API Security**  
+- Authentication Methods (JWT, OAuth 2.0, API Keys)  
+- Authorization (Role-based Access Control - RBAC)  
+- CORS (Cross-Origin Resource Sharing)  
+- Rate Limiting & Throttling  
+- Data Encryption (HTTPS, SSL/TLS)  
+- Secure API Design Best Practices  
+
+**4. REST API Performance Optimization**  
+- Pagination & Filtering  
+- Caching Strategies (CDN, Redis, ETag, Cache-Control)  
+- Load Balancing & Scaling APIs  
+- Asynchronous Processing (WebSockets, Async/Await, Message Queues)  
+- Database Optimization (Indexing, Connection Pooling)  
+
+**5. API Testing**  
+- Manual API Testing (Postman, cURL)  
+- Automated API Testing (Pytest, JUnit, Mocha, Jest)  
+- API Contract Testing (PACT)  
+- Performance Testing (JMeter, K6)  
+- Security Testing for APIs  
+
+**6. API Documentation & Versioning**  
+- OpenAPI Specification (Swagger)  
+- API Blueprint  
+- API Versioning (URI Versioning, Header Versioning, Query Param Versioning)  
+- API Deprecation Strategies  
+
+**7. Advanced REST API Topics**  
+- GraphQL vs REST  
+- gRPC (Alternative to REST)  
+- WebSockets & Real-time APIs  
+- Microservices & API Gateway (Kong, Nginx, Traefik)  
+- Serverless APIs (AWS Lambda, Google Cloud Functions)  
+- Event-Driven APIs (Kafka, RabbitMQ)  
+- Observability & Metrics (Prometheus, Grafana)

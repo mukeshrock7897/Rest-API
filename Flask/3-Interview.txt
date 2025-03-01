@@ -1,0 +1,267 @@
+
+**   Basic Flask Interview Questions**  
+
+**1. What is Flask?**  
+**Answer:**  
+Flask is a **lightweight and micro web framework** for Python, designed to build **web applications and RESTful APIs**. It is based on **Werkzeug (WSGI toolkit)** and **Jinja2 (templating engine)** and follows a minimalistic approach, making it easy to extend with third-party libraries.  
+
+👉 **Example:**  
+```python
+from flask import Flask  
+app = Flask(__name__)  
+
+@app.route("/")  
+def home():  
+return "Hello, Flask!"  
+
+if __name__ == "__main__":  
+app.run(debug=True)  
+```
+
+---
+
+**2. How is Flask different from Django?**  
+| Feature       | Flask (Micro) | Django (Full-stack) |
+|--------------|-------------|----------------|
+| Flexibility  | High        | Opinionated   |
+| Database     | Optional (SQLAlchemy) | Built-in ORM |
+| Template Engine | Jinja2 | Django Template |
+| Use Case | APIs, Small Apps | Large Applications |
+
+---
+
+**3. What are the key features of Flask?**  
+**Answer:**  
+- **Lightweight & Minimal** – Uses only required components.  
+- **Modular Design** – Choose libraries as needed.  
+- **Built-in Development Server & Debugger** – Speeds up debugging.  
+- **RESTful Request Handling** – Ideal for APIs.  
+- **Secure** – Supports authentication, session management, and extensions.  
+
+---
+
+**4. How do you install Flask?**  
+**Answer:**  
+Use `pip`:  
+```bash
+pip install flask
+```
+
+---
+
+**   Intermediate Flask Interview Questions**  
+
+**5. What are Flask Blueprints?**  
+**Answer:**  
+Blueprints **help organize a large Flask application** by breaking it into multiple modules.  
+
+👉 **Example:**  
+```python
+from flask import Blueprint
+
+bp = Blueprint("admin", __name__)
+
+@bp.route("/dashboard")  
+def dashboard():  
+return "Admin Dashboard"
+
+app.register_blueprint(bp, url_prefix="/admin")
+```
+
+---
+
+**6. How do you handle forms in Flask?**  
+**Answer:**  
+Flask provides **Flask-WTF** for form handling and validation.  
+
+👉 **Example:**  
+```python
+from flask_wtf import FlaskForm  
+from wtforms import StringField, SubmitField  
+from wtforms.validators import DataRequired  
+
+class MyForm(FlaskForm):  
+name = StringField("Enter Name", validators=[DataRequired()])  
+submit = SubmitField("Submit")  
+```
+
+---
+
+**7. How does Flask handle sessions?**  
+**Answer:**  
+Flask uses **signed cookies** to store session data on the client side.  
+
+👉 **Example:**  
+```python
+from flask import Flask, session  
+
+app.secret_key = "mysecret"
+
+@app.route("/set_session")  
+def set_session():  
+session["user"] = "John Doe"  
+return "Session Set"
+
+@app.route("/get_session")  
+def get_session():  
+return f"User: {session.get('user')}"
+```
+
+---
+
+**8. What is Jinja2, and how is it used in Flask?**  
+**Answer:**  
+Jinja2 is **Flask’s templating engine** used to generate dynamic HTML pages.  
+
+👉 **Example:**  
+```html
+<h1>Welcome {{ name }}!</h1>
+```
+
+---
+
+**   Advanced Flask Interview Questions**  
+
+**9. How do you secure a Flask application?**  
+**Answer:**  
+- Use **Flask-Login** for authentication.  
+- Hash passwords using **Flask-Bcrypt**.  
+- Use **JWT authentication** for APIs.  
+- Enable **CSRF protection** with Flask-WTF.  
+
+👉 **Example (Password Hashing):**  
+```python
+from flask_bcrypt import Bcrypt  
+bcrypt = Bcrypt(app)  
+hashed_pw = bcrypt.generate_password_hash("mypassword").decode('utf-8')  
+```
+
+---
+
+**10. What is Flask-RESTful, and how does it work?**  
+**Answer:**  
+Flask-RESTful is an extension for **creating RESTful APIs** in Flask.  
+
+👉 **Example:**  
+```python
+from flask_restful import Resource, Api  
+
+api = Api(app)  
+
+class Hello(Resource):  
+def get(self):  
+    return {"message": "Hello, World!"}
+
+api.add_resource(Hello, "/")
+```
+
+---
+
+**11. How do you deploy a Flask application?**  
+**Answer:**  
+- **Gunicorn/uWSGI** – For production WSGI server.  
+- **Docker** – Containerized deployment.  
+- **Cloud (AWS/GCP/Azure)** – Serverless and scalable hosting.  
+
+👉 **Example (Gunicorn Deployment):**  
+```bash
+gunicorn -w 4 myapp:app
+```
+
+---
+
+**12. How does Flask handle error handling and custom error pages?**  
+**Answer:**  
+Flask allows **custom error handlers** for specific HTTP errors.  
+
+👉 **Example:**  
+```python
+@app.errorhandler(404)  
+def not_found(e):  
+return "Page not found!", 404  
+```
+
+---
+
+**   Expert-Level Flask Interview Questions**  
+
+**13. How do you implement WebSockets in Flask?**  
+**Answer:**  
+Use **Flask-SocketIO** for real-time communication.  
+
+👉 **Example:**  
+```python
+from flask_socketio import SocketIO  
+
+socketio = SocketIO(app)  
+
+@socketio.on("message")  
+def handle_message(msg):  
+print(f"Message: {msg}")  
+
+socketio.run(app)
+```
+
+---
+
+**14. How do you implement background tasks in Flask?**  
+**Answer:**  
+Use **Celery** for task queues.  
+
+👉 **Example:**  
+```python
+from celery import Celery  
+
+celery = Celery(app.name, broker="redis://localhost:6379/0")  
+
+@celery.task  
+def long_task():  
+return "Task Completed"
+```
+
+---
+
+**15. What is Flask-CORS, and why is it needed?**  
+**Answer:**  
+**CORS (Cross-Origin Resource Sharing)** allows requests from different domains.  
+
+👉 **Example:**  
+```python
+from flask_cors import CORS  
+CORS(app)
+```
+
+---
+
+**🚀 Bonus: Scenario-Based Questions**  
+
+**16. How would you structure a large Flask project?**  
+**Answer:**  
+- Use **Blueprints** for modularization.  
+- Separate **config files** for different environments.  
+- Use **SQLAlchemy for ORM** and **Celery for background tasks**.  
+- **Logging & Monitoring** for debugging.  
+
+---
+
+**17. How would you optimize Flask performance?**  
+**Answer:**  
+- Use **Gunicorn/uWSGI** for production.  
+- Enable **Flask-Caching** for response caching.  
+- Optimize **database queries** using indexing.  
+- Use **Asynchronous processing** for heavy tasks.  
+
+---
+
+**18. How would you implement OAuth authentication in Flask?**  
+**Answer:**  
+Use **Flask-OAuthlib** or **Flask-Dance** for OAuth authentication (Google, Facebook, GitHub).  
+
+👉 **Example (Google Login):**  
+```python
+from flask_dance.contrib.google import make_google_blueprint, google  
+google_bp = make_google_blueprint(client_id="xxx", client_secret="yyy")  
+app.register_blueprint(google_bp, url_prefix="/login")
+```
+
+---

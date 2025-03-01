@@ -1,0 +1,247 @@
+---
+
+# **1. Fundamentals of REST API**  
+
+**Q1: What is a REST API?**  
+**A:** REST (Representational State Transfer) is an architectural style for designing web services. It uses HTTP methods and follows principles like statelessness, cacheability, and uniform interface.
+
+**Example:**  
+A REST API allows fetching a user’s details:  
+```bash
+GET https://api.example.com/users/1
+```
+
+---
+
+**Q2: What are the main differences between REST and SOAP?**  
+**A:**  
+| Feature        | REST             | SOAP |
+|----------      |------            |------|
+| Protocol       | HTTP             | HTTP, SMTP, TCP |
+| Data Format    | JSON, XML        | XML |
+| Performance    | Fast & lightweight | Slower, heavy XML parsing |
+| Security       | OAuth, JWT, HTTPS| WS-Security |
+| State          | Stateless        | Can be stateful or stateless |
+
+**Example:**  
+**REST Request:**  
+```bash
+GET https://api.example.com/users/1
+```
+**SOAP Request (XML):**  
+```xml
+<soap:Envelope>
+<soap:Body>
+<GetUser>
+    <UserId>1</UserId>
+</GetUser>
+</soap:Body>
+</soap:Envelope>
+```
+
+---
+
+**Q3: What are the six principles of REST?**  
+**A:**  
+1. **Client-Server Architecture** – Separates frontend and backend.  
+2. **Statelessness** – Each request is independent, no session on the server.  
+3. **Cacheability** – Responses can be cached to improve performance.  
+4. **Layered System** – Multiple layers for scalability.  
+5. **Uniform Interface** – Consistent API design.  
+6. **Code on Demand (optional)** – Server can send executable code (e.g., JavaScript).  
+
+---
+
+**Q4: What are the common HTTP methods used in REST APIs?**  
+**A:**  
+| Method | Purpose | Example |
+|--------|---------|---------|
+| **GET** | Retrieve data | `GET /users/1` |
+| **POST** | Create a resource | `POST /users` |
+| **PUT** | Update a resource | `PUT /users/1` |
+| **DELETE** | Remove a resource | `DELETE /users/1` |
+| **PATCH** | Partial update | `PATCH /users/1` |
+
+**Example:** Creating a user:  
+```bash
+POST https://api.example.com/users
+Content-Type: application/json
+{
+"name": "Alice",
+"email": "alice@example.com"
+}
+```
+
+---
+
+**Q5: What are the common HTTP status codes in REST APIs?**  
+**A:**  
+| Code | Meaning |
+|------|---------|
+| **200 OK** | Success |
+| **201 Created** | Resource created |
+| **400 Bad Request** | Invalid input |
+| **401 Unauthorized** | Authentication required |
+| **403 Forbidden** | Access denied |
+| **404 Not Found** | Resource not found |
+| **500 Internal Server Error** | Server-side issue |
+
+---
+
+# **2. API Development**  
+
+**Q6: How do you structure REST API endpoints?**  
+**A:**  
+Use **resource-based naming** with nouns and avoid verbs.  
+
+**Example:**  
+- ✅ `GET /users` – Fetch all users  
+- ✅ `GET /users/1` – Fetch a single user  
+- ❌ `GET /getUser/1` – Wrong, use nouns  
+
+---
+
+**Q7: How do you handle query parameters and path variables in REST APIs?**  
+**A:**  
+- **Path Variables:** `GET /users/{id}` (For specific resource)  
+- **Query Parameters:** `GET /users?role=admin` (For filtering/sorting)  
+
+**Example:**  
+```bash
+GET https://api.example.com/users?role=admin&sort=asc
+```
+
+---
+
+**Q8: How do you handle errors in REST APIs?**  
+**A:** Use proper **HTTP status codes** and **error messages**.  
+
+**Example (Flask Python Error Handling):**  
+```python
+@app.errorhandler(404)
+def not_found(error):
+return jsonify({"error": "User not found"}), 404
+```
+
+---
+
+# **3. REST API Security**  
+
+**Q9: How do you secure a REST API?**  
+**A:**  
+1. **Authentication** – Use JWT, OAuth 2.0, API keys  
+2. **Authorization** – Role-based access control (RBAC)  
+3. **Data Encryption** – Use HTTPS  
+4. **Rate Limiting** – Prevent DDoS attacks  
+5. **CORS Handling** – Prevent cross-origin issues  
+
+---
+
+**Q10: What is JWT (JSON Web Token) in REST APIs?**  
+**A:** JWT is a compact, self-contained token for authentication.  
+
+**Example JWT Token:**  
+```json
+{
+"user_id": 123,
+"exp": "2025-02-28T12:00:00Z"
+}
+```
+
+**Example (Flask JWT Authentication):**  
+```python
+import jwt
+
+SECRET_KEY = "my_secret"
+
+def generate_token(user_id):
+return jwt.encode({"user_id": user_id}, SECRET_KEY, algorithm="HS256")
+
+print(generate_token(1))
+```
+
+---
+
+# **4. REST API Performance Optimization**  
+
+**Q11: How do you improve REST API performance?**  
+**A:**  
+- **Caching:** Store frequent API responses (Redis, CDN).  
+- **Pagination:** Load large datasets in chunks.  
+- **Compression:** Use Gzip to reduce payload size.  
+- **Load Balancing:** Distribute traffic across servers.  
+
+**Example (Flask Caching with Redis):**  
+```python
+from flask_caching import Cache
+
+cache = Cache(app, config={'CACHE_TYPE': 'redis'})
+
+@app.route('/users/<int:user_id>')
+@cache.cached(timeout=60)
+def get_user(user_id):
+return jsonify({"id": user_id, "name": "John Doe"})
+```
+
+---
+
+# **5. API Testing**  
+
+**Q12: How do you test REST APIs?**  
+**A:**  
+1. **Postman:** Manual API testing  
+2. **Automated Testing:** Pytest, JUnit  
+3. **Security Testing:** OWASP ZAP  
+4. **Performance Testing:** JMeter, K6  
+
+**Example (Testing with Pytest):**  
+```python
+import requests
+
+def test_get_user():
+response = requests.get("https://api.example.com/users/1")
+assert response.status_code == 200
+```
+
+---
+
+# **6. API Documentation & Versioning**  
+
+**Q13: How do you document REST APIs?**  
+**A:** Use OpenAPI (Swagger) or API Blueprint.  
+
+**Example (Swagger YAML):**  
+```yaml
+openapi: 3.0.0
+info:
+title: User API
+version: 1.0.0
+paths:
+/users:
+get:
+    summary: Get all users
+```
+
+---
+
+# **7. Advanced REST API Topics**  
+
+**Q14: What is the difference between REST and GraphQL?**  
+**A:**  
+| Feature | REST | GraphQL |
+|---------|------|---------|
+| Data Fetching | Fixed endpoints | Fetch only required fields |
+| Performance | Over-fetching possible | Efficient data fetching |
+| Complexity | Simple | More complex |
+
+**Example GraphQL Query:**  
+```graphql
+{
+user(id: 1) {
+name
+email
+}
+}
+```
+
+---

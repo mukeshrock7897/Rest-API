@@ -1,0 +1,245 @@
+---
+
+**Beginner-Level Questions**
+**1. What is FastAPI?**
+**Answer:**  
+FastAPI is a modern, high-performance web framework for building APIs with Python 3.6+ based on **Starlette** and **Pydantic**. It provides automatic OpenAPI documentation, async support, and built-in validation.
+
+**2. How do you install FastAPI and run a basic application?**
+**Answer:**  
+Install FastAPI and Uvicorn using:  
+```bash
+pip install fastapi uvicorn
+```
+Basic FastAPI app:
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+return {"message": "Hello, FastAPI!"}
+```
+Run the app:
+```bash
+uvicorn main:app --reload
+```
+
+**3. What are the key features of FastAPI?**
+**Answer:**  
+- **Automatic OpenAPI and ReDoc documentation**  
+- **Asynchronous support** (`async/await`)  
+- **Built-in data validation** using **Pydantic**  
+- **Dependency Injection system**  
+- **Fast execution** (based on Starlette)  
+
+**4. What are Path and Query parameters in FastAPI?**  
+**Answer:**  
+- **Path Parameters**: Passed directly in the URL (`/items/{item_id}`)  
+- **Query Parameters**: Appended after `?` in the URL (`/items?name=phone`)  
+
+Example:  
+```python
+@app.get("/items/{item_id}")
+def get_item(item_id: int, name: str = "default"):
+return {"item_id": item_id, "name": name}
+```
+
+**URL:** `/items/10?name=laptop`  
+**Response:**  
+```json
+{"item_id": 10, "name": "laptop"}
+```
+
+---
+
+**Intermediate-Level Questions**
+**5. What is Pydantic in FastAPI?**
+**Answer:**  
+Pydantic is a data validation and serialization library used in FastAPI for defining request and response models.
+
+Example:
+```python
+from pydantic import BaseModel
+
+class User(BaseModel):
+name: str
+age: int
+
+@app.post("/users/")
+def create_user(user: User):
+return user
+```
+If an invalid `age` (e.g., a string) is provided, FastAPI will raise a **validation error**.
+
+**6. How do you handle file uploads in FastAPI?**
+**Answer:**  
+Using `UploadFile` and `File()`:
+```python
+from fastapi import File, UploadFile
+
+@app.post("/upload/")
+def upload_file(file: UploadFile = File(...)):
+return {"filename": file.filename}
+```
+
+**7. How does dependency injection work in FastAPI?**
+**Answer:**  
+FastAPI uses `Depends()` to inject dependencies into routes.
+
+Example:
+```python
+from fastapi import Depends
+
+def get_db():
+return {"db": "Connected"}
+
+@app.get("/items/")
+def get_items(db=Depends(get_db)):
+return db
+```
+
+**8. How does FastAPI handle authentication?**
+**Answer:**  
+FastAPI supports authentication methods like **OAuth2, JWT, and API Keys**.
+
+Example: **OAuth2 JWT Authentication**
+```python
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@app.get("/protected/")
+def protected(token: str = Depends(oauth2_scheme)):
+return {"token": token}
+```
+
+---
+
+**Advanced-Level Questions**
+**9. What is the difference between FastAPI and Flask?**
+**Answer:**  
+| Feature       | FastAPI | Flask |
+|--------------|--------|-------|
+| Performance  | Faster (async) | Slower (sync) |
+| Type Safety  | Yes (Pydantic) | No |
+| Async Support | Built-in | Requires Flask-async |
+| Automatic Docs | Yes (Swagger/ReDoc) | No (Manual) |
+| Dependency Injection | Yes | No |
+
+**10. How do you integrate a database with FastAPI using SQLAlchemy?**
+**Answer:**  
+```python
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+DATABASE_URL = "sqlite:///./test.db"
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+class User(Base):
+__tablename__ = "users"
+id = Column(Integer, primary_key=True, index=True)
+name = Column(String)
+
+Base.metadata.create_all(bind=engine)
+```
+
+**11. How do you implement middleware in FastAPI?**
+**Answer:**  
+```python
+from fastapi import Request
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+CORSMiddleware,
+allow_origins=["*"],
+allow_credentials=True,
+allow_methods=["*"],
+allow_headers=["*"],
+)
+
+@app.middleware("http")
+async def custom_middleware(request: Request, call_next):
+response = await call_next(request)
+response.headers["X-Custom-Header"] = "CustomData"
+return response
+```
+
+**12. How do you deploy a FastAPI application using Docker?**
+**Answer:**  
+**Dockerfile:**
+```dockerfile
+FROM python:3.9
+WORKDIR /app
+COPY . .
+RUN pip install fastapi uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+Run:
+```bash
+docker build -t fastapi-app .
+docker run -p 8000:8000 fastapi-app
+```
+
+---
+
+**Expert-Level Questions**
+**13. How do you implement background tasks in FastAPI?**
+**Answer:**  
+```python
+from fastapi import BackgroundTasks
+
+def write_log(message: str):
+print(f"Logging: {message}")
+
+@app.post("/log/")
+def log_message(message: str, background_tasks: BackgroundTasks):
+background_tasks.add_task(write_log, message)
+return {"message": "Task added"}
+```
+
+**14. How does FastAPI handle WebSockets?**
+**Answer:**  
+```python
+from fastapi import WebSocket
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+await websocket.accept()
+await websocket.send_text("Hello WebSocket")
+await websocket.close()
+```
+
+**15. How do you optimize FastAPI performance?**
+**Answer:**  
+- Use **async functions** for non-blocking calls  
+- Use **database connection pooling**  
+- Use **Gunicorn and Uvicorn workers**  
+- Enable **caching** (Redis)  
+- Use **CDN for static files**  
+
+---
+
+**Bonus: FastAPI Scenario-Based Questions**
+**16. How would you handle large file uploads in FastAPI?**
+- Use `StreamingResponse` instead of loading files into memory.
+
+**17. How do you return custom status codes in FastAPI?**
+```python
+from fastapi.responses import JSONResponse
+
+@app.get("/custom-response/")
+def custom_response():
+return JSONResponse(content={"message": "Custom Response"}, status_code=201)
+```
+
+**18. How do you generate API documentation in FastAPI?**
+**Answer:**  
+FastAPI automatically generates:
+- **Swagger UI**: `http://127.0.0.1:8000/docs`
+- **ReDoc UI**: `http://127.0.0.1:8000/redoc`
+
+---

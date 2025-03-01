@@ -1,0 +1,69 @@
+1. Introduction to Flask   
+- What is Flask?  
+- Features of Flask  
+- Flask vs Django  
+- Installing Flask  
+- First Flask Application  
+
+2. Flask Basics   
+- Routing  
+- URL Converters  
+- HTTP Methods (GET, POST, PUT, DELETE)  
+- Request and Response Objects  
+- Flask Debug Mode  
+
+3. Templates & Static Files   
+- Jinja2 Templating Engine  
+- Rendering HTML Templates  
+- Passing Data to Templates  
+- Template Inheritance  
+- Using Static Files (CSS, JS, Images)  
+
+4. Flask Forms   
+- Handling Forms  
+- Flask-WTF (WTForms)  
+- Form Validation  
+
+5. Flask and Databases   
+- SQLAlchemy ORM  
+- Flask-SQLAlchemy  
+- Database Migrations with Flask-Migrate  
+- Performing CRUD Operations  
+
+6. Flask Authentication & Security   
+- User Authentication  
+- Flask-Login (Session Management)  
+- Flask-Bcrypt (Password Hashing)  
+- JWT Authentication  
+- OAuth with Flask  
+
+7. Flask APIs & RESTful Services   
+- Creating RESTful APIs  
+- Flask-RESTful  
+- Flask-RESTx (Swagger API Documentation)  
+- Flask-CORS (Cross-Origin Resource Sharing)  
+
+8. Middleware and Request Handling   
+- Flask Middleware  
+- Request Hooks (before_request, after_request)  
+- Handling Errors and Exceptions  
+
+9. Flask Configuration & Deployment   
+- Flask Configuration Management  
+- Environment Variables  
+- Logging in Flask  
+- Deploying Flask on AWS, GCP, Azure  
+- Dockerizing a Flask App  
+- Gunicorn and uWSGI  
+
+10. Advanced Flask Features   
+- Flask Blueprints (Modular Applications)  
+- Flask Caching (Flask-Caching)  
+- Flask-SocketIO (Real-time WebSockets)  
+- Celery with Flask (Task Queue)  
+- Asynchronous Tasks in Flask  
+
+11. Testing Flask Applications   
+- Unit Testing with pytest  
+- Flask Testing Tools  
+- Mocking Requests  

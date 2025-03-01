@@ -1,0 +1,298 @@
+---
+
+**1. Introduction to FastAPI**  
+**What is FastAPI?**  
+FastAPI is a modern, high-performance web framework for building APIs with Python 3.6+ based on **Starlette** and **Pydantic**. It is designed to be **fast**, **easy to use**, and **efficient**.  
+
+**Features and Advantages**  
+- **Automatic API documentation** using OpenAPI  
+- **Fast execution** due to asynchronous capabilities  
+- **Data validation** using Pydantic  
+- **Dependency injection** for modular code  
+- **Type hints support** for better readability  
+
+**Installing FastAPI and Uvicorn**  
+To install FastAPI and a production ASGI server (Uvicorn):  
+```bash
+pip install fastapi uvicorn
+```
+
+**First FastAPI Application**  
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+return {"message": "Hello, FastAPI!"}
+```
+Run the server using:  
+```bash
+uvicorn main:app --reload
+```
+Visit **http://127.0.0.1:8000** to see the response.
+
+---
+
+**2. FastAPI Basics**
+**Creating Endpoints (`GET`, `POST`, `PUT`, `DELETE`)**
+- **`GET`** - Retrieve data  
+- **`POST`** - Create new data  
+- **`PUT`** - Update existing data  
+- **`DELETE`** - Remove data  
+
+Example:  
+```python
+@app.get("/items/{item_id}")
+def read_item(item_id: int):
+return {"item_id": item_id}
+
+@app.post("/items/")
+def create_item(name: str):
+return {"name": name}
+
+@app.put("/items/{item_id}")
+def update_item(item_id: int, name: str):
+return {"item_id": item_id, "updated_name": name}
+
+@app.delete("/items/{item_id}")
+def delete_item(item_id: int):
+return {"message": f"Item {item_id} deleted"}
+```
+
+---
+
+**Path Parameters and Query Parameters**
+- **Path Parameter**: Passed in the URL  
+- **Query Parameter**: Appended to the URL after `?`  
+
+Example:
+```python
+@app.get("/users/{user_id}")
+def get_user(user_id: int, role: str = "user"):
+return {"user_id": user_id, "role": role}
+```
+**Request:**  
+`GET /users/123?role=admin`  
+**Response:**  
+```json
+{"user_id": 123, "role": "admin"}
+```
+
+---
+
+**Request and Response Models using Pydantic**
+FastAPI uses **Pydantic** for request validation.  
+
+Example:
+```python
+from pydantic import BaseModel
+
+class Item(BaseModel):
+name: str
+price: float
+in_stock: bool
+
+@app.post("/items/")
+def create_item(item: Item):
+return {"message": "Item created", "data": item}
+```
+
+---
+
+**Handling Form Data and Request Body**
+**Form Data Example**  
+```python
+from fastapi import Form
+
+@app.post("/login/")
+def login(username: str = Form(...), password: str = Form(...)):
+return {"username": username}
+```
+
+---
+
+**Handling Headers and Cookies**
+**Header Example**
+```python
+from fastapi import Header
+
+@app.get("/headers/")
+def read_headers(user_agent: str = Header(None)):
+return {"User-Agent": user_agent}
+```
+
+**Cookie Example**
+```python
+from fastapi import Cookie
+
+@app.get("/cookie/")
+def read_cookie(session_id: str = Cookie(None)):
+return {"session_id": session_id}
+```
+
+---
+
+**File Uploads**
+```python
+from fastapi import File, UploadFile
+
+@app.post("/upload/")
+def upload_file(file: UploadFile = File(...)):
+return {"filename": file.filename}
+```
+
+---
+
+**3. Dependency Injection**
+FastAPI supports **dependency injection** using `Depends()`.  
+```python
+from fastapi import Depends
+
+def common_query_parameters(q: str = None):
+return {"query": q}
+
+@app.get("/search/")
+def search(params: dict = Depends(common_query_parameters)):
+return params
+```
+
+---
+
+**4. Request Validation and Serialization**
+**Input Validation Example**
+```python
+class User(BaseModel):
+name: str
+age: int
+
+@app.post("/users/")
+def create_user(user: User):
+return user
+```
+If `age` is sent as a string, FastAPI will raise a **validation error**.
+
+---
+
+**Custom Exception Handling**
+```python
+from fastapi import HTTPException
+
+@app.get("/error/")
+def raise_exception():
+raise HTTPException(status_code=400, detail="Custom Error")
+```
+
+---
+
+**5. Authentication and Authorization**
+**JWT Authentication**
+```python
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@app.get("/protected/")
+def protected(token: str = Depends(oauth2_scheme)):
+return {"token": token}
+```
+
+---
+
+**6. Database Integration**
+**Using SQLAlchemy with FastAPI**
+```python
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+DATABASE_URL = "sqlite:///./test.db"
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+class User(Base):
+__tablename__ = "users"
+id = Column(Integer, primary_key=True, index=True)
+name = Column(String)
+
+Base.metadata.create_all(bind=engine)
+```
+
+---
+
+**7. Background Tasks and WebSockets**
+**Running Background Tasks**
+```python
+from fastapi import BackgroundTasks
+
+def log_message(message: str):
+print(f"Logging: {message}")
+
+@app.post("/background/")
+def send_notification(message: str, background_tasks: BackgroundTasks):
+background_tasks.add_task(log_message, message)
+return {"message": "Task added"}
+```
+
+---
+
+**WebSockets Example**
+```python
+from fastapi import WebSocket
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+await websocket.accept()
+await websocket.send_text("Hello WebSocket")
+await websocket.close()
+```
+
+---
+
+**8. Middleware and CORS**
+**Adding Middleware**
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+CORSMiddleware,
+allow_origins=["*"],
+allow_credentials=True,
+allow_methods=["*"],
+allow_headers=["*"],
+)
+```
+
+---
+
+**9. Testing FastAPI Applications**
+```python
+from fastapi.testclient import TestClient
+
+client = TestClient(app)
+
+def test_read_root():
+response = client.get("/")
+assert response.status_code == 200
+assert response.json() == {"message": "Hello, FastAPI!"}
+```
+
+---
+
+**10. Deployment with Docker**
+**Dockerfile for FastAPI**
+```dockerfile
+FROM python:3.9
+WORKDIR /app
+COPY . .
+RUN pip install fastapi uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+Build and run:  
+```bash
+docker build -t fastapi-app .
+docker run -p 8000:8000 fastapi-app
+```
+
+---

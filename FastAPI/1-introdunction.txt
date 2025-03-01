@@ -1,0 +1,95 @@
+**1. Introduction to FastAPI**
+- What is FastAPI?
+- Features and Advantages
+- Installing FastAPI and Uvicorn
+- First FastAPI Application
+
+---
+
+**2. FastAPI Basics**
+- Creating Endpoints with `GET`, `POST`, `PUT`, and `DELETE`
+- Path Parameters and Query Parameters
+- Request and Response Models using Pydantic
+- Handling Form Data and Request Body
+- Handling Headers and Cookies
+- File Uploads
+
+---
+
+**3. Dependency Injection**
+- Understanding Dependencies in FastAPI
+- Using `Depends` for Dependency Injection
+- Custom Dependencies
+
+---
+
+**4. Request Validation and Serialization**
+- Input Validation using Pydantic
+- Response Models and Custom Responses
+- Data Serialization and Validation
+- Custom Exception Handling
+
+---
+
+**5. Authentication and Authorization**
+- JWT Authentication (OAuth2 with Password Flow)
+- API Key-based Authentication
+- Role-based Access Control (RBAC)
+- Integrating with OAuth2 and OpenID Connect
+
+---
+
+**6. Database Integration**
+- Connecting FastAPI with SQL Databases using SQLAlchemy
+- CRUD Operations with SQLAlchemy ORM
+- Using FastAPI with NoSQL Databases (MongoDB, Firebase)
+- Dependency Injection with Database Sessions
+
+---
+
+**7. Background Tasks and WebSockets**
+- Running Background Tasks in FastAPI
+- WebSockets Implementation for Real-time Communication
+
+---
+
+**8. Middleware and CORS**
+- Creating and Using Middleware
+- Handling CORS in FastAPI
+
+---
+
+**9. Async and Performance Optimization**
+- Understanding `async` and `await`
+- Improving API Performance with Caching
+- Optimizing Database Queries
+
+---
+
+**10. Testing FastAPI Applications**
+- Writing Unit and Integration Tests
+- Using `pytest` for FastAPI Testing
+- Mocking External Dependencies
+
+---
+
+**11. API Documentation and OpenAPI**
+- Automatic API Documentation with Swagger and ReDoc
+- Customizing API Documentation
+- Generating API Clients from OpenAPI Schema
+
+---
+
+**12. Deployment and Containerization**
+- Deploying FastAPI with Docker and Kubernetes
+- Using Gunicorn and Uvicorn for Production
+- CI/CD Pipeline for FastAPI Deployment
+
+---
+
+**13. Advanced Topics**
+- GraphQL Integration with FastAPI
+- Building Microservices with FastAPI
+- Event-Driven Architecture using FastAPI
+- Streaming Large Data Responses
+- Server-Sent Events (SSE) in FastAPI

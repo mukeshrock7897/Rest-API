@@ -1,0 +1,287 @@
+## **1. Fundamentals of REST API**
+
+### **1.1 What is REST?**
+**Definition:**
+REST (Representational State Transfer) is an architectural style for designing networked applications that use HTTP for communication between clients and servers.
+
+**Example:**  
+A REST API allows clients to retrieve user data from a server using an HTTP request:
+```bash
+GET https://api.example.com/users/1
+```
+Response (JSON):  
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+---
+
+### **1.2 REST vs SOAP**  
+**Definition:**  
+- **REST**: Uses HTTP, lightweight, supports JSON & XML, stateless.  
+- **SOAP**: Uses XML, heavyweight, follows strict protocol, stateful or stateless.  
+
+**Example (REST vs SOAP request format):**  
+**REST (JSON request)**
+```bash
+GET https://api.example.com/users/1
+```
+Response:
+```json
+{"id": 1, "name": "John Doe"}
+```
+**SOAP (XML request)**
+```xml
+<soap:Envelope>
+  <soap:Body>
+    <GetUser>
+      <UserId>1</UserId>
+    </GetUser>
+  </soap:Body>
+</soap:Envelope>
+```
+
+---
+
+### **1.3 Principles of RESTful APIs**  
+1. **Client-Server Architecture**  
+2. **Statelessness** (No session on server)  
+3. **Cacheable** (Responses can be cached)  
+4. **Layered System** (Multiple layers allowed)  
+5. **Uniform Interface** (Standard HTTP methods)  
+6. **Code on Demand (optional)** (JavaScript execution)
+
+---
+
+### **1.4 HTTP Methods**  
+- **GET** – Retrieve data  
+- **POST** – Create data  
+- **PUT** – Update data  
+- **DELETE** – Remove data  
+- **PATCH** – Partial update  
+
+**Example: Using HTTP Methods**  
+```bash
+# Create user
+POST https://api.example.com/users
+{
+  "name": "Alice",
+  "email": "alice@example.com"
+}
+```
+```bash
+# Get user details
+GET https://api.example.com/users/1
+```
+
+---
+
+### **1.5 HTTP Status Codes**  
+- **200 OK** – Request successful  
+- **201 Created** – Resource created  
+- **400 Bad Request** – Invalid input  
+- **401 Unauthorized** – Authentication required  
+- **403 Forbidden** – Access denied  
+- **404 Not Found** – Resource missing  
+- **500 Internal Server Error** – Server issue  
+
+**Example:**  
+```json
+{
+  "status": 404,
+  "message": "User not found"
+}
+```
+
+---
+
+### **1.6 URL Structure & Endpoints**  
+**Definition:**  
+A REST API uses structured URLs to access resources.
+
+**Example:**  
+- `GET /users` → Fetch all users  
+- `GET /users/1` → Fetch user with ID 1  
+- `POST /users` → Create a new user  
+- `PUT /users/1` → Update user with ID 1  
+- `DELETE /users/1` → Delete user with ID 1  
+
+---
+
+### **1.7 Request & Response Format**  
+REST APIs use **JSON** or **XML** for communication.
+
+**Example JSON Response:**  
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+---
+
+### **1.8 REST API Authentication**  
+- **Basic Authentication:** Username & password in headers.  
+- **Token-based Authentication:** API keys.  
+- **JWT (JSON Web Token):** Encrypted tokens.  
+- **OAuth 2.0:** Secure user authentication.  
+
+**Example (JWT Token Authentication):**  
+```bash
+GET https://api.example.com/users
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+---
+
+## **2. API Development**
+
+### **2.1 Setting up a REST API (Flask Example)**  
+```python
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = {"id": user_id, "name": "John Doe"}
+    return jsonify(user)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+---
+
+### **2.2 Error Handling**  
+**Example (Flask Error Handling):**  
+```python
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not Found"}), 404
+```
+
+---
+
+## **3. REST API Security**
+
+### **3.1 JWT Authentication Example (Flask & Python)**  
+```python
+import jwt
+from datetime import datetime, timedelta
+
+SECRET_KEY = "your_secret_key"
+
+def generate_token(user_id):
+    payload = {"user_id": user_id, "exp": datetime.utcnow() + timedelta(days=1)}
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
+print(generate_token(1))
+```
+
+---
+
+## **4. REST API Performance Optimization**
+
+### **4.1 Caching Example (Flask + Redis)**  
+```python
+from flask_caching import Cache
+
+cache = Cache(app, config={'CACHE_TYPE': 'redis'})
+
+@app.route('/users/<int:user_id>')
+@cache.cached(timeout=60)
+def get_user(user_id):
+    return jsonify({"id": user_id, "name": "John Doe"})
+```
+
+---
+
+## **5. API Testing**
+
+### **5.1 Testing API with Postman**  
+1. Open Postman.  
+2. Enter `GET https://api.example.com/users/1`  
+3. Click **Send**  
+4. Check response.  
+
+---
+
+## **6. API Documentation & Versioning**
+
+### **6.1 OpenAPI (Swagger) Documentation Example**  
+```yaml
+openapi: 3.0.0
+info:
+  title: User API
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: A list of users
+```
+
+---
+
+## **7. Advanced REST API Topics**
+
+### **7.1 GraphQL vs REST**  
+**GraphQL Example Query:**  
+```graphql
+{
+  user(id: 1) {
+    name
+    email
+  }
+}
+```
+GraphQL allows fetching only required fields.
+
+---
+
+### **7.2 Microservices & API Gateway Example**  
+Use **Kong API Gateway** for managing microservices.  
+```bash
+curl -X POST http://localhost:8001/services \
+     --data "name=user-service" \
+     --data "url=http://localhost:5000"
+```
+
+---
+
+### **7.3 Serverless API Example (AWS Lambda + API Gateway)**  
+```python
+import json
+
+def lambda_handler(event, context):
+    return {
+        "statusCode": 200,
+        "body": json.dumps({"message": "Hello from AWS Lambda!"})
+    }
+```
+
+---
+
+### **7.4 WebSockets & Real-time APIs (Flask-SocketIO Example)**  
+```python
+from flask_socketio import SocketIO
+
+socketio = SocketIO(app)
+
+@socketio.on('message')
+def handle_message(msg):
+    print(f"Message: {msg}")
+
+socketio.run(app)
+```
+
+---
