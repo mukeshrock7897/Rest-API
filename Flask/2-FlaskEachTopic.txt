@@ -1,322 +1,293 @@
-**Flask Framework - Complete Guide**  
-
----
-
-**1. Introduction to Flask**  
-
-**1.1 What is Flask?**  
-**Definition:** Flask is a lightweight and modular web framework in Python used for building web applications and APIs. It is based on **Werkzeug (WSGI toolkit)** and **Jinja2 (templating engine)**.  
-
-**Example:**  
-```python
-from flask import Flask  
-app = Flask(__name__)  
-
-@app.route("/")  
-def home():  
-return "Hello, Flask!"  
-
-if __name__ == "__main__":  
-app.run(debug=True)  
-```
-
----
-
-**1.2 Features of Flask**  
-- **Lightweight & Minimal** – No built-in database or ORM.  
-- **Modular** – Use only what is needed.  
-- **Jinja2 Templating** – Supports dynamic HTML generation.  
-- **RESTful API Support** – Best for microservices and APIs.  
-- **Secure** – Extensions for authentication and security.  
-
----
-
-**1.3 Flask vs Django**  
-
-| Feature           | Flask (Micro)           | Django (Full-stack) |
-|-------------------|-------------------------|---------------------|
-| Flexibility       | High                    | Opinionated         |
-| Database          | Optional (SQLAlchemy)   | Built-in ORM        |
-| Template Engine   | Jinja2 | Django Template|                     |
-| Use Case          | APIs, Small Apps        | Large Applications  |
-
----
-
-**1.4 Installing Flask**  
-**Command to install Flask:**  
-```bash
-pip install flask
-```
-
----
-
-**1.5 First Flask Application**  
-**Example:**  
-```python
-from flask import Flask  
-app = Flask(__name__)  
-
-@app.route("/")  
-def hello():  
-return "Welcome to Flask!"  
-
-if __name__ == "__main__":  
-app.run(debug=True)  
-```
----
-
-**2. Flask Basics**  
-
-**2.1 Routing**  
-**Definition:** Mapping URLs to Python functions.  
-
-**Example:**  
-```python
-@app.route("/about")  
-def about():  
-return "About Page"  
-```
-
----
-
-**2.2 URL Converters**  
-**Definition:** Convert URL path parameters.  
-
-**Example:**  
-```python
-@app.route("/user/<int:id>")  
-def user(id):  
-return f"User ID: {id}"  
-```
-
----
-
-**2.3 HTTP Methods**  
-**Definition:** Define request types (GET, POST, PUT, DELETE).  
-
-**Example:**  
-```python
-@app.route("/submit", methods=["POST"])  
-def submit():  
-return "Form Submitted"  
-```
-
----
-
-**2.4 Request and Response Objects**  
-**Definition:** Handle incoming requests and responses.  
-
-**Example:**  
-```python
-from flask import request  
-@app.route("/data", methods=["POST"])  
-def data():  
-return f"Received: {request.json}"  
-```
-
----
-
-**2.5 Flask Debug Mode**  
-**Definition:** Enables debugging and auto-reloading.  
-
-**Enable Debug Mode:**  
-```python
-app.run(debug=True)
-```
-
----
-
-**3. Templates & Static Files**  
-
-**3.1 Jinja2 Templating Engine**  
-**Definition:** Allows dynamic HTML rendering.  
-
-**Example:**  
-```html
-<h1>Welcome {{ name }}!</h1>
-```
-
----
-
-**3.2 Rendering HTML Templates**  
-**Definition:** Pass variables to templates.  
-
-**Example:**  
-```python
-from flask import render_template  
-@app.route("/profile/<name>")  
-def profile(name):  
-return render_template("profile.html", name=name)  
-```
-
----
-
-**3.3 Passing Data to Templates**  
-**Definition:** Use Python variables inside HTML.  
-
-**Example:**  
-```html
-{% for item in items %}  
-<p>{{ item }}</p>  
-{% endfor %}
-```
-
----
-
-**3.4 Template Inheritance**  
-**Definition:** Reuse common layouts.  
-
-**Example:**  
-```html
-{% extends "base.html" %}  
-{% block content %}  
-<h2>Dashboard</h2>  
-{% endblock %}
-```
-
----
-
-**3.5 Using Static Files (CSS, JS, Images)**  
-**Definition:** Store static assets in `static/` folder.  
-
-**Example:**  
-```html
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-```
-
----
-
-**4. Flask Forms**  
-
-**4.1 Handling Forms**  
-**Definition:** Capture user inputs.  
-
-**Example:**  
-```python
-@app.route("/submit", methods=["POST"])  
-def submit():  
-name = request.form["name"]  
-return f"Hello, {name}!"  
-```
-
----
-
-**4.2 Flask-WTF (WTForms)**  
-**Definition:** Flask extension for handling forms.  
-
-**Example:**  
-```python
-from flask_wtf import FlaskForm  
-from wtforms import StringField, SubmitField  
-
-class MyForm(FlaskForm):  
-name = StringField("Enter Name")  
-submit = SubmitField("Submit")  
-```
-
----
-
-**4.3 Form Validation**  
-**Definition:** Validate form data before processing.  
-
-**Example:**  
-```python
-class MyForm(FlaskForm):  
-name = StringField("Enter Name", validators=[DataRequired()])  
-```
-
----
-
-**5. Flask and Databases**  
-
-**5.1 SQLAlchemy ORM**  
-**Definition:** Object Relational Mapping for databases.  
-
-**Example:**  
-```python
-from flask_sqlalchemy import SQLAlchemy  
-db = SQLAlchemy(app)  
-```
-
----
-
-**5.2 Flask-SQLAlchemy**  
-**Definition:** Integrates SQLAlchemy with Flask.  
-
-**Example:**  
-```python
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
-db.create_all()
-```
-
----
-
-**5.3 Database Migrations with Flask-Migrate**  
-**Definition:** Handles database schema changes.  
-
-**Example:**  
-```bash
-flask db migrate -m "Initial migration"
-```
-
----
-
-**5.4 Performing CRUD Operations**  
-**Definition:** Create, Read, Update, Delete records.  
-
-**Example:**  
-```python
-user = User(name="John")  
-db.session.add(user)  
-db.session.commit()
-```
-
----
-
-**6. Flask Authentication & Security**  
-
-**6.1 User Authentication**  
-**Definition:** Secure user login.  
-
-**Example:**  
-```python
-from flask_login import LoginManager  
-login_manager = LoginManager(app)  
-```
-
----
-
-**6.2 Flask-Login (Session Management)**  
-**Definition:** Handles user sessions.  
-
-**Example:**  
-```python
-@login_manager.user_loader  
-def load_user(user_id):  
-return User.query.get(int(user_id))  
-```
-
----
-
-**6.3 Flask-Bcrypt (Password Hashing)**  
-**Definition:** Encrypts passwords.  
-
-**Example:**  
-```python
-from flask_bcrypt import Bcrypt  
-bcrypt = Bcrypt(app)  
-hashed_pw = bcrypt.generate_password_hash("mypassword").decode('utf-8')  
-```
-
----
-
-**6.4 JWT Authentication**  
-**Definition:** Secure API authentication with tokens.  
-
-**Example:**  
-```python
-from flask_jwt_extended import create_access_token  
-token = create_access_token(identity="user123")  
-```
-
----
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# **Flask Framework - Complete Guide**  \n",
+    "\n",
+    "## **1. Introduction to Flask**  \n",
+    "**Definition:** Flask is a lightweight Python web framework designed for building web applications and REST APIs quickly. It follows the **WSGI** standard and is based on **Werkzeug** and **Jinja2**.  \n",
+    "\n",
+    "**Example: Installing Flask**  \n",
+    "```bash\n",
+    "pip install flask\n",
+    "```  \n",
+    "**Basic Flask Application**  \n",
+    "```python\n",
+    "from flask import Flask  \n",
+    "app = Flask(__name__)  \n",
+    "\n",
+    "@app.route(\"/\")  \n",
+    "def home():  \n",
+    "return \"Hello, Flask!\"  \n",
+    "\n",
+    "if __name__ == \"__main__\":  \n",
+    "app.run(debug=True)  \n",
+    "```\n",
+    "\n",
+    "## **2. Flask Basics**  \n",
+    "\n",
+    "### **2.1 Routing**  \n",
+    "**Definition:** Routing determines how URLs map to functions in a Flask application.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "@app.route(\"/about\")  \n",
+    "def about():  \n",
+    "return \"About Page\"  \n",
+    "```  \n",
+    "\n",
+    "### **2.2 URL Converters**  \n",
+    "**Definition:** URL converters allow dynamic URLs using placeholders like `<int:id>`, `<string:name>`, etc.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "@app.route(\"/user/<int:id>\")  \n",
+    "def user(id):  \n",
+    "return f\"User ID: {id}\"  \n",
+    "```\n",
+    "\n",
+    "### **2.3 HTTP Methods**  \n",
+    "**Definition:** HTTP methods like GET, POST, PUT, DELETE define how data is sent and received.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "@app.route(\"/submit\", methods=[\"POST\"])  \n",
+    "def submit():  \n",
+    "return \"Form Submitted\"  \n",
+    "```\n",
+    "\n",
+    "### **2.4 Request and Response Objects**  \n",
+    "**Definition:** Request and Response objects handle incoming HTTP requests and responses.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask import request  \n",
+    "@app.route(\"/data\", methods=[\"POST\"])  \n",
+    "def data():  \n",
+    "return f\"Received: {request.json}\"  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **3. Templates & Static Files**  \n",
+    "\n",
+    "### **3.1 Jinja2 Templating**  \n",
+    "**Definition:** Jinja2 allows dynamic HTML generation with variables and loops.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask import render_template  \n",
+    "@app.route(\"/profile/<name>\")  \n",
+    "def profile(name):  \n",
+    "return render_template(\"profile.html\", name=name)  \n",
+    "```\n",
+    "**profile.html**  \n",
+    "```html\n",
+    "<html>  \n",
+    "<body>  \n",
+    "<h1>Welcome {{ name }}!</h1>  \n",
+    "</body>  \n",
+    "</html>  \n",
+    "```\n",
+    "\n",
+    "### **3.2 Static Files**  \n",
+    "**Definition:** Static files like CSS, JavaScript, and images are stored in the `static/` directory.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```html\n",
+    "<link rel=\"stylesheet\" href=\"{{ url_for('static', filename='style.css') }}\">\n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **4. Flask Forms**  \n",
+    "**Definition:** Flask-WTF simplifies handling forms with validation.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask_wtf import FlaskForm  \n",
+    "from wtforms import StringField, SubmitField  \n",
+    "class MyForm(FlaskForm):  \n",
+    "name = StringField(\"Enter Name\")  \n",
+    "submit = SubmitField(\"Submit\")  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **5. Flask and Databases**  \n",
+    "**Definition:** Flask-SQLAlchemy integrates databases like MySQL, PostgreSQL, and SQLite.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask_sqlalchemy import SQLAlchemy  \n",
+    "app.config[\"SQLALCHEMY_DATABASE_URI\"] = \"sqlite:///users.db\"  \n",
+    "db = SQLAlchemy(app)  \n",
+    "\n",
+    "class User(db.Model):  \n",
+    "id = db.Column(db.Integer, primary_key=True)  \n",
+    "name = db.Column(db.String(100))  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **6. Flask Authentication & Security**  \n",
+    "\n",
+    "### **6.1 Flask-Login (User Sessions)**  \n",
+    "**Definition:** Manages user login sessions securely.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask_login import LoginManager\n",
+    "login_manager = LoginManager(app)\n",
+    "```\n",
+    "\n",
+    "### **6.2 Password Hashing (Flask-Bcrypt)**  \n",
+    "**Definition:** Encrypts passwords for security.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask_bcrypt import Bcrypt  \n",
+    "bcrypt = Bcrypt(app)  \n",
+    "hashed_password = bcrypt.generate_password_hash(\"mypassword\").decode('utf-8')  \n",
+    "```\n",
+    "\n",
+    "### **6.3 JWT Authentication**  \n",
+    "**Definition:** JSON Web Tokens (JWT) are used for secure API authentication.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask_jwt_extended import create_access_token  \n",
+    "access_token = create_access_token(identity=\"user123\")  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **7. Flask APIs & RESTful Services**  \n",
+    "**Definition:** Used to create APIs that return JSON responses.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask import jsonify  \n",
+    "@app.route(\"/api/user/<name>\")  \n",
+    "def api_user(name):  \n",
+    "return jsonify({\"user\": name, \"status\": \"active\"})  \n",
+    "```\n",
+    "\n",
+    "**Flask-RESTful API Example**  \n",
+    "```python\n",
+    "from flask_restful import Api, Resource  \n",
+    "api = Api(app)  \n",
+    "\n",
+    "class HelloWorld(Resource):  \n",
+    "def get(self):  \n",
+    "    return {\"message\": \"Hello, World!\"}  \n",
+    "\n",
+    "api.add_resource(HelloWorld, \"/\")  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **8. Middleware and Request Handling**  \n",
+    "**Definition:** Middleware executes functions before and after requests.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "@app.before_request  \n",
+    "def before():  \n",
+    "print(\"Before request executed!\")  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **9. Flask Configuration & Deployment**  \n",
+    "**Definition:** Configures Flask settings and enables deployment on cloud platforms.  \n",
+    "\n",
+    "**Dockerfile for Deployment:**  \n",
+    "```dockerfile\n",
+    "FROM python:3.9  \n",
+    "WORKDIR /app  \n",
+    "COPY . .  \n",
+    "RUN pip install -r requirements.txt  \n",
+    "CMD [\"python\", \"app.py\"]  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **10. Advanced Flask Features**  \n",
+    "\n",
+    "### **10.1 Flask Blueprints**  \n",
+    "**Definition:** Organizes large applications into multiple modules.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask import Blueprint  \n",
+    "auth_bp = Blueprint(\"auth\", __name__)  \n",
+    "\n",
+    "@auth_bp.route(\"/login\")  \n",
+    "def login():  \n",
+    "return \"Login Page\"  \n",
+    "\n",
+    "app.register_blueprint(auth_bp, url_prefix=\"/auth\")  \n",
+    "```\n",
+    "\n",
+    "### **10.2 WebSockets with Flask-SocketIO**  \n",
+    "**Definition:** Enables real-time communication.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "from flask_socketio import SocketIO  \n",
+    "socketio = SocketIO(app)  \n",
+    "@socketio.on(\"message\")  \n",
+    "def handle_message(msg):  \n",
+    "print(\"Received:\", msg)  \n",
+    "```\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## **11. Testing Flask Applications**  \n",
+    "**Definition:** Ensures application reliability with unit testing.  \n",
+    "\n",
+    "**Example:**  \n",
+    "```python\n",
+    "import unittest  \n",
+    "class FlaskTest(unittest.TestCase):  \n",
+    "def test_home(self):  \n",
+    "    response = app.test_client().get(\"/\")  \n",
+    "    self.assertEqual(response.status_code, 200)  \n",
+    "```\n",
+    "\n",
+    "---"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "base",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
